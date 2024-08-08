@@ -2,6 +2,15 @@ import streamlit as st
 import requests
 import datetime
 import pandas as pd
+import streamlit as st
+
+st.set_page_config(
+    page_title="feedback",  # This sets the browser tab title
+    page_icon="🎈",  # You can also set a favicon or emoji here
+    layout="centered",  # You can choose between 'centered' or 'wide'
+)
+
+st.title("Your New App Name")  # This sets the title within the app
 
 # Function to submit data to Google Forms
 def submit_form(data):
