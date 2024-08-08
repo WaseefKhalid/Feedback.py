@@ -1,15 +1,23 @@
 # Feedback.py
 import streamlit as st
 import pandas as pd
-import os
+import datetime
 
 # Streamlit app
+st.set_page_config(page_title="QHPC-UOL Daily Session Activity Report", layout="wide")
 st.title("QHPC-UOL Daily Session Activity Report")
 
-session_no = st.text_input("Session No.")
-date = st.date_input("Date")
-net_no = st.text_input("Net No.")
-astro_no = st.text_input("Astro No.")
+# Session details
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    session_no = st.text_input("Session No.")
+with col2:
+    date = st.date_input("Date", value=datetime.date.today())
+with col3:
+    net_no = st.text_input("Net No.")
+with col4:
+    astro_no = st.text_input("Astro No.")
+
 coach_name = st.text_input("Coach Name")
 
 st.subheader("Player Details")
@@ -29,17 +37,29 @@ player_data = {
 num_players = st.number_input("Number of Players", min_value=1, step=1)
 
 for i in range(num_players):
-    st.write(f"Player {i + 1}")
-    player_data["Roll No"].append(st.text_input(f"Roll No. {i + 1}"))
-    player_data["Student Name"].append(st.text_input(f"Student Name {i + 1}"))
-    player_data["Speciality"].append(st.selectbox(f"Speciality {i + 1}", ["Batter", "Bowler", "All Rounder"]))
-    player_data["Attendance"].append(st.selectbox(f"Attendance {i + 1}", ["Present", "Absent"]))
-    player_data["Nature"].append(st.selectbox(f"Nature {i + 1}", ["Attack", "Defend"]))
-    player_data["Ball Played"].append(st.selectbox(f"Ball Played {i + 1}", ["Astro Turf", "Cement"]))
+    st.markdown(f"**Player {i + 1}**")
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    with col1:
+        player_data["Roll No"].append(st.text_input(f"Roll No. {i + 1}"))
+    with col2:
+        player_data["Student Name"].append(st.text_input(f"Student Name {i + 1}"))
+    with col3:
+        player_data["Speciality"].append(st.selectbox(f"Speciality {i + 1}", ["Batter", "Bowler", "All Rounder"], key=f"speciality_{i}"))
+    with col4:
+        player_data["Attendance"].append(st.selectbox(f"Attendance {i + 1}", ["Present", "Absent"], key=f"attendance_{i}"))
+    with col5:
+        player_data["Nature"].append(st.selectbox(f"Nature {i + 1}", ["Attack", "Defend"], key=f"nature_{i}"))
+    with col6:
+        player_data["Ball Played"].append(st.selectbox(f"Ball Played {i + 1}", ["Astro Turf", "Cement"], key=f"ball_played_{i}"))
+
     player_data["Specific Drills/Skill Work"].append(st.text_input(f"Specific Drills/Skill Work {i + 1}"))
-    player_data["Areas of Improvement"].append(st.text_input(f"Areas of Improvement {i + 1}"))
-    player_data["Key Strength"].append(st.text_input(f"Key Strength {i + 1}"))
-    player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}"))
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        player_data["Areas of Improvement"].append(st.text_input(f"Areas of Improvement {i + 1}"))
+    with col2:
+        player_data["Key Strength"].append(st.text_input(f"Key Strength {i + 1}"))
+    with col3:
+        player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}"))
 
 if st.button("Submit"):
     df = pd.DataFrame(player_data)
