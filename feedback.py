@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import datetime
+import pandas as pd
 
 # Function to submit data to Google Forms
 def submit_form(data):
@@ -120,5 +121,10 @@ if submit_button:
         st.error("There was an error submitting your feedback.")
 
     # Optional: Display the feedback data
-    df = pd.DataFrame(feedback_data)
+    feedback_display = {
+        "Question": questions,
+        "Rating": feedback_data["Rating"]
+    }
+    df = pd.DataFrame(feedback_display)
     st.write(df)
+
