@@ -41,50 +41,21 @@ def send_email(file_path, recipient_email):
 # Set the page config at the very beginning
 st.set_page_config(page_title="QHPC-UOL Cricket Academy Feedback", layout="wide")
 
-# QHPC-UOL theme colors
-primary_color = "#FF0000"  # Red color for primary elements
-secondary_color = "#FFFFFF"  # White color for secondary elements
-background_color = "#90EE90"  # Light green color for background
-
-# Custom CSS for theme
-st.markdown(f"""
-    <style>
-        .stApp {{
-            background-color: {background_color};
-            color: {secondary_color};
-        }}
-        .stButton > button {{
-            background-color: {primary_color};
-            color: {secondary_color};
-        }}
-        .stTextInput > div > div > input {{
-            background-color: {secondary_color};
-            color: {background_color};
-        }}
-        .stSelectbox > div > div > div {{
-            background-color: {secondary_color};
-            color: {background_color};
-        }}
-        h1, h2, h3, h4, h5, h6 {{
-            color: {secondary_color};
-        }}
-    </style>
-    """, unsafe_allow_html=True)
-
 # Adding QHPC-UOL logo
 st.image("https://upload.wikimedia.org/wikipedia/en/2/2e/Lahore_Qalandars_logo.png", width=200)
 
 # Streamlit app
+st.markdown("### Created by Waseef Khalid")
 st.title("QHPC-UOL Cricket Academy Feedback")
 
 # Feedback details
-st.markdown("### Feedback Details", unsafe_allow_html=True)
+st.subheader("Feedback Details")
 date = st.date_input("Date", value=datetime.date.today())
 name = st.text_input("Your Name")
 relation = st.selectbox("Relation to Academy", ["Student", "Parent"])
 
 # Coach feedback section
-st.markdown("### Coach Feedback", unsafe_allow_html=True)
+st.subheader("Coach Feedback")
 coach_name = st.text_input("Coach Name")
 
 # Feedback questions
@@ -100,15 +71,15 @@ questions = [
     "I would recommend this training session to others"
 ]
 ratings = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
-feedback_data = {"Question": questions, "Rating": [], "Comments": []}
+feedback_data = {"Question": questions, "Rating": []}
 
 for i, question in enumerate(questions):
-    st.write(f"#### {question}")
-    rating = st.selectbox(f"Rating for {question}", ratings, key=f"rating_{i}")
+    st.write(f"**{question}**")
+    rating = st.radio(f"Rating for {question}", ratings, key=f"rating_{i}", horizontal=True)
     feedback_data["Rating"].append(rating)
 
 # Further comments
-st.markdown("### Further Comments", unsafe_allow_html=True)
+st.subheader("Further Comments")
 improvement_comments = st.text_area("How could the training session be improved?")
 positive_comments = st.text_area("What did the coach/teacher do well?")
 additional_comments = st.text_area("If you have any additional comments, please use the space below:")
