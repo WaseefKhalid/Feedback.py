@@ -1,38 +1,22 @@
 import streamlit as st
 import pandas as pd
 import datetime
-import sqlite3
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
-# Initialize SQLite database
-conn = sqlite3.connect('feedback.db')
-c = conn.cursor()
+# Function to initialize the Google Sheets connection
+def init_gsheet():
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_name("path/to/your-service-account-file.json", scope)
+    client = gspread.authorize(creds)
+    return client.open("Your Google Sheet Name").sheet1  # Replace with your Google Sheet name
 
-# Create table if it doesn't exist
-c.execute('''CREATE TABLE IF NOT EXISTS feedback
-             (date TEXT, name TEXT, relation TEXT, coach_name TEXT,
-              question1 TEXT, rating1 TEXT, question2 TEXT, rating2 TEXT,
-              question3 TEXT, rating3 TEXT, question4 TEXT, rating4 TEXT,
-              question5 TEXT, rating5 TEXT, question6 TEXT, rating6 TEXT,
-              question7 TEXT, rating7 TEXT, question8 TEXT, rating8 TEXT,
-              question9 TEXT, rating9 TEXT, improvement_comments TEXT,
-              positive_comments TEXT, additional_comments TEXT)''')
-conn.commit()
+# Function to insert data into Google Sheets
+def insert_feedback(sheet, data_tuple):
+    sheet.append_row(data_tuple)
 
-# Function to insert data into the database
-def insert_feedback(date, name, relation, coach_name, feedback_data, improvement_comments, positive_comments, additional_comments):
-    data_tuple = (date, name, relation, coach_name,
-                  feedback_data['Question'][0], feedback_data['Rating'][0],
-                  feedback_data['Question'][1], feedback_data['Rating'][1],
-                  feedback_data['Question'][2], feedback_data['Rating'][2],
-                  feedback_data['Question'][3], feedback_data['Rating'][3],
-                  feedback_data['Question'][4], feedback_data['Rating'][4],
-                  feedback_data['Question'][5], feedback_data['Rating'][5],
-                  feedback_data['Question'][6], feedback_data['Rating'][6],
-                  feedback_data['Question'][7], feedback_data['Rating'][7],
-                  feedback_data['Question'][8], feedback_data['Rating'][8],
-                  improvement_comments, positive_comments, additional_comments)
-    c.execute('''INSERT INTO feedback VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', data_tuple)
-    conn.commit()
+# Initialize Google Sheets
+sheet = init_gsheet()
 
 # Set the page config at the very beginning
 st.set_page_config(page_title="QHPC-UOL Cricket Academy Feedback", layout="wide")
@@ -85,7 +69,18 @@ with st.form(key='feedback_form'):
     submit_button = st.form_submit_button(label='Submit Feedback')
 
 if submit_button:
-    insert_feedback(date, name, relation, coach_name, feedback_data, improvement_comments, positive_comments, additional_comments)
+    data_tuple = [str(date), name, relation, coach_name,
+                  feedback_data['Question'][0], feedback_data['Rating'][0],
+                  feedback_data['Question'][1], feedback_data['Rating'][1],
+                  feedback_data['Question'][2], feedback_data['Rating'][2],
+                  feedback_data['Question'][3], feedback_data['Rating'][3],
+                  feedback_data['Question'][4], feedback_data['Rating'][4],
+                  feedback_data['Question'][5], feedback_data['Rating'][5],
+                  feedback_data['Question'][6], feedback_data['Rating'][6],
+                  feedback_data['Question'][7], feedback_data['Rating'][7],
+                  feedback_data['Question'][8], feedback_data['Rating'][8],
+                  improvement_comments, positive_comments, additional_comments]
+    insert_feedback(sheet, data_tuple)
     st.success("Feedback submitted successfully!")
 
     # Optional: Display the feedback data
@@ -94,8 +89,7 @@ if submit_button:
 
 # Optional: Export feedback data to CSV
 if st.button("Export to CSV"):
-    c.execute('SELECT * FROM feedback')
-    rows = c.fetchall()
+    rows = sheet.get_all_values()
     df = pd.DataFrame(rows, columns=['Date', 'Name', 'Relation', 'Coach Name',
                                      'Question1', 'Rating1', 'Question2', 'Rating2',
                                      'Question3', 'Rating3', 'Question4', 'Rating4',
@@ -105,3 +99,4 @@ if st.button("Export to CSV"):
                                      'Positive Comments', 'Additional Comments'])
     df.to_csv("all_feedback.csv", index=False)
     st.success("All feedback data exported to CSV successfully!")
+
