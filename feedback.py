@@ -3,6 +3,36 @@ import streamlit as st
 import pandas as pd
 import datetime
 
+# Lahore Qalandars theme colors
+primary_color = "#FF0000"  # Red color for primary elements
+secondary_color = "#FFFFFF"  # White color for secondary elements
+background_color = "#000000"  # Black color for background
+
+# Custom CSS for theme
+st.markdown(f"""
+    <style>
+        .stApp {{
+            background-color: {background_color};
+            color: {secondary_color};
+        }}
+        .stButton > button {{
+            background-color: {primary_color};
+            color: {secondary_color};
+        }}
+        .stTextInput > div > div > input {{
+            background-color: {secondary_color};
+            color: {background_color};
+        }}
+        .stSelectbox > div > div > div {{
+            background-color: {secondary_color};
+            color: {background_color};
+        }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# Adding Lahore Qalandars logo
+st.image("https://upload.wikimedia.org/wikipedia/en/2/2e/Lahore_Qalandars_logo.png", width=200)
+
 # Streamlit app
 st.set_page_config(page_title="QHPC-UOL Daily Session Activity Report", layout="wide")
 st.title("QHPC-UOL Daily Session Activity Report")
