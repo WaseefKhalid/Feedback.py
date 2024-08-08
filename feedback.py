@@ -38,21 +38,26 @@ num_players = st.number_input("Number of Players", min_value=1, step=1)
 
 for i in range(num_players):
     st.markdown(f"**Player {i + 1}**")
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col2 = st.columns(2)
     with col1:
         player_data["Roll No"].append(st.text_input(f"Roll No. {i + 1}"))
     with col2:
         player_data["Student Name"].append(st.text_input(f"Student Name {i + 1}"))
-    with col3:
+        
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    with col1:
         player_data["Speciality"].append(st.selectbox(f"Speciality {i + 1}", ["Batter", "Bowler", "All Rounder"], key=f"speciality_{i}"))
-    with col4:
+    with col2:
         player_data["Attendance"].append(st.selectbox(f"Attendance {i + 1}", ["Present", "Absent"], key=f"attendance_{i}"))
-    with col5:
+    with col3:
         player_data["Nature"].append(st.selectbox(f"Nature {i + 1}", ["Attack", "Defend"], key=f"nature_{i}"))
-    with col6:
+    with col4:
         player_data["Ball Played"].append(st.selectbox(f"Ball Played {i + 1}", ["Astro Turf", "Cement"], key=f"ball_played_{i}"))
+    with col5:
+        player_data["Specific Drills/Skill Work"].append(st.text_input(f"Specific Drills/Skill Work {i + 1}"))
+    with col6:
+        player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}"))
 
-    player_data["Specific Drills/Skill Work"].append(st.text_input(f"Specific Drills/Skill Work {i + 1}"))
     col1, col2, col3 = st.columns(3)
     with col1:
         player_data["Areas of Improvement"].append(st.text_input(f"Areas of Improvement {i + 1}"))
