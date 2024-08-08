@@ -1,60 +1,56 @@
 import streamlit as st
 import pandas as pd
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-
-# Function to send email
-def send_email(subject, body, to_email, file_path):
-    # Email credentials
-    sender_email = "your_email@gmail.com"
-    sender_password = "your_email_password"
-    
-    # Create the email
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = to_email
-    msg["Subject"] = subject
-
-    # Attach the body with the msg instance
-    msg.attach(MIMEText(body, "plain"))
-
-    # Open the file to be sent
-    with open(file_path, "rb") as attachment:
-        part = MIMEApplication(attachment.read(), Name=file_path)
-        part['Content-Disposition'] = f'attachment; filename="{file_path}"'
-        msg.attach(part)
-
-    # Create a secure SSL context and send email
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(sender_email, sender_password)
-        server.sendmail(sender_email, to_email, msg.as_string())
+import os
 
 # Streamlit app
-st.title("Send a Message to Receive via Email")
+st.title("QHPC-UOL Daily Session Activity Report")
 
-# Input field for the message
-message = st.text_area("Enter your message here")
+session_no = st.text_input("Session No.")
+date = st.date_input("Date")
+net_no = st.text_input("Net No.")
+astro_no = st.text_input("Astro No.")
+coach_name = st.text_input("Coach Name")
 
-# Button to submit
+st.subheader("Player Details")
+player_data = {
+    "Roll No": [],
+    "Student Name": [],
+    "Speciality": [],
+    "Attendance": [],
+    "Nature": [],
+    "Ball Played": [],
+    "Specific Drills/Skill Work": [],
+    "Areas of Improvement": [],
+    "Key Strength": [],
+    "Remarks": []
+}
+
+num_players = st.number_input("Number of Players", min_value=1, step=1)
+
+for i in range(num_players):
+    st.write(f"Player {i + 1}")
+    player_data["Roll No"].append(st.text_input(f"Roll No. {i + 1}"))
+    player_data["Student Name"].append(st.text_input(f"Student Name {i + 1}"))
+    player_data["Speciality"].append(st.selectbox(f"Speciality {i + 1}", ["Batter", "Bowler", "All Rounder"]))
+    player_data["Attendance"].append(st.selectbox(f"Attendance {i + 1}", ["Present", "Absent"]))
+    player_data["Nature"].append(st.selectbox(f"Nature {i + 1}", ["Attack", "Defend"]))
+    player_data["Ball Played"].append(st.selectbox(f"Ball Played {i + 1}", ["Astro Turf", "Cement"]))
+    player_data["Specific Drills/Skill Work"].append(st.text_input(f"Specific Drills/Skill Work {i + 1}"))
+    player_data["Areas of Improvement"].append(st.text_input(f"Areas of Improvement {i + 1}"))
+    player_data["Key Strength"].append(st.text_input(f"Key Strength {i + 1}"))
+    player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}"))
+
 if st.button("Submit"):
-    if message:
-        # Create a DataFrame
-        df = pd.DataFrame({"Message": [message]})
-        
-        # Save to CSV
-        csv_file = "message.csv"
-        df.to_csv(csv_file, index=False)
-        
-        # Send the email with the CSV attachment
-        send_email(
-            subject="New Message from Waseef",
-            body="Please find the attached message.",
-            to_email="your_email@example.com",
-            file_path=csv_file
-        )
-        
-        st.success("Message sent successfully!")
-    else:
-        st.error("Please enter a message.")
+    df = pd.DataFrame(player_data)
+    st.write(df)
+    
+    # Save dataframe to CSV
+    csv_file = "session_activity_report.csv"
+    df.to_csv(csv_file, index=False)
+    st.success("Data submitted and saved to CSV successfully!")
+
+if st.button("Export to CSV"):
+    df = pd.DataFrame(player_data)
+    df.to_csv("session_activity_report.csv", index=False)
+    st.success("Data exported to CSV successfully!")
+
