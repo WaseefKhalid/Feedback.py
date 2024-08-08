@@ -8,8 +8,8 @@ st.set_page_config(page_title="QHPC-UOL Daily Session Activity Report", layout="
 
 # Lahore Qalandars theme colors
 primary_color = "#FF0000"  # Red color for primary elements
-secondary_color = "#FFFFFF"  # White color for secondary elements
-background_color = "#000000"  # Black color for background
+secondary_color = "#000000"  # Black color for secondary elements
+background_color = "#90EE90"  # Light green color for background
 
 # Custom CSS for theme
 st.markdown(f"""
