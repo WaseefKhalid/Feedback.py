@@ -7,9 +7,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 # Function to initialize the Google Sheets connection
 def init_gsheet():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("path/to/your-service-account-file.json", scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["connections"]["gsheets"], scope)
     client = gspread.authorize(creds)
-    return client.open("Your Google Sheet Name").sheet1  # Replace with your Google Sheet name
+    return client.open_by_url(st.secrets["connections"]["gsheets"]["spreadsheet"]).sheet1  # Replace with your Google Sheet name
 
 # Function to insert data into Google Sheets
 def insert_feedback(sheet, data_tuple):
@@ -99,4 +99,5 @@ if st.button("Export to CSV"):
                                      'Positive Comments', 'Additional Comments'])
     df.to_csv("all_feedback.csv", index=False)
     st.success("All feedback data exported to CSV successfully!")
+
 
