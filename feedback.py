@@ -65,6 +65,9 @@ st.markdown(f"""
             background-color: {secondary_color};
             color: {background_color};
         }}
+        h1, h2, h3, h4, h5, h6 {{
+            color: {secondary_color};
+        }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -75,13 +78,13 @@ st.image("https://upload.wikimedia.org/wikipedia/en/2/2e/Lahore_Qalandars_logo.p
 st.title("QHPC-UOL Cricket Academy Feedback")
 
 # Feedback details
-st.write("### Feedback Details")
+st.markdown("### Feedback Details", unsafe_allow_html=True)
 date = st.date_input("Date", value=datetime.date.today())
 name = st.text_input("Your Name")
 relation = st.selectbox("Relation to Academy", ["Student", "Parent"])
 
 # Coach feedback section
-st.write("### Coach Feedback")
+st.markdown("### Coach Feedback", unsafe_allow_html=True)
 coach_name = st.text_input("Coach Name")
 
 # Feedback questions
@@ -105,7 +108,7 @@ for i, question in enumerate(questions):
     feedback_data["Rating"].append(rating)
 
 # Further comments
-st.write("### Further Comments")
+st.markdown("### Further Comments", unsafe_allow_html=True)
 improvement_comments = st.text_area("How could the training session be improved?")
 positive_comments = st.text_area("What did the coach/teacher do well?")
 additional_comments = st.text_area("If you have any additional comments, please use the space below:")
