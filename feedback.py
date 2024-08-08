@@ -3,6 +3,9 @@ import streamlit as st
 import pandas as pd
 import datetime
 
+# Set the page config at the very beginning
+st.set_page_config(page_title="QHPC-UOL Daily Session Activity Report", layout="wide")
+
 # Lahore Qalandars theme colors
 primary_color = "#FF0000"  # Red color for primary elements
 secondary_color = "#FFFFFF"  # White color for secondary elements
@@ -34,7 +37,6 @@ st.markdown(f"""
 st.image("https://upload.wikimedia.org/wikipedia/en/2/2e/Lahore_Qalandars_logo.png", width=200)
 
 # Streamlit app
-st.set_page_config(page_title="QHPC-UOL Daily Session Activity Report", layout="wide")
 st.title("QHPC-UOL Daily Session Activity Report")
 
 # Session details
