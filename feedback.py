@@ -40,9 +40,9 @@ for i in range(num_players):
     st.markdown(f"**Player {i + 1}**")
     col1, col2 = st.columns(2)
     with col1:
-        player_data["Roll No"].append(st.text_input(f"Roll No. {i + 1}"))
+        player_data["Roll No"].append(st.text_input(f"Roll No. {i + 1}", key=f"roll_no_{i}"))
     with col2:
-        player_data["Student Name"].append(st.text_input(f"Student Name {i + 1}"))
+        player_data["Student Name"].append(st.text_input(f"Student Name {i + 1}", key=f"student_name_{i}"))
         
     col1, col2, col3, col4, col5, col6 = st.columns(6)
     with col1:
@@ -54,17 +54,17 @@ for i in range(num_players):
     with col4:
         player_data["Ball Played"].append(st.selectbox(f"Ball Played {i + 1}", ["Astro Turf", "Cement"], key=f"ball_played_{i}"))
     with col5:
-        player_data["Specific Drills/Skill Work"].append(st.text_input(f"Specific Drills/Skill Work {i + 1}"))
+        player_data["Specific Drills/Skill Work"].append(st.text_input(f"Specific Drills/Skill Work {i + 1}", key=f"specific_drills_{i}"))
     with col6:
-        player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}"))
+        player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}", key=f"remarks_{i}"))
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        player_data["Areas of Improvement"].append(st.text_input(f"Areas of Improvement {i + 1}"))
+        player_data["Areas of Improvement"].append(st.text_input(f"Areas of Improvement {i + 1}", key=f"areas_of_improvement_{i}"))
     with col2:
-        player_data["Key Strength"].append(st.text_input(f"Key Strength {i + 1}"))
+        player_data["Key Strength"].append(st.text_input(f"Key Strength {i + 1}", key=f"key_strength_{i}"))
     with col3:
-        player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}"))
+        player_data["Remarks"].append(st.text_input(f"Remarks {i + 1}", key=f"remarks_{i+num_players}"))
 
 if st.button("Submit"):
     df = pd.DataFrame(player_data)
