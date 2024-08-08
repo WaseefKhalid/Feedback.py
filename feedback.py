@@ -1,4 +1,4 @@
-# Feedback.py
+
 import streamlit as st
 import pandas as pd
 import datetime
@@ -8,35 +8,50 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 import os
+import base64
 
-# Function to send email with the CSV attachment
-def send_email(file_path, recipient_email):
-    from_email = "your_email@example.com"  # Replace with your email
-    from_password = "your_password"        # Replace with your email password
-
-    subject = "QHPC-UOL Cricket Academy Feedback"
-    body = "Please find the attached feedback report."
-
+# Function to send email with the CSV attachment using smtplib
+def send_email(subject, body, to_email, from_email, from_password, file_path):
+    # Create message container
     msg = MIMEMultipart()
     msg['From'] = from_email
-    msg['To'] = recipient_email
+    msg['To'] = to_email
     msg['Subject'] = subject
 
+    # Attach the body with the msg instance
     msg.attach(MIMEText(body, 'plain'))
 
-    attachment = open(file_path, "rb")
-    part = MIMEBase('application', 'octet-stream')
-    part.set_payload((attachment).read())
-    encoders.encode_base64(part)
-    part.add_header('Content-Disposition', f"attachment; filename= {os.path.basename(file_path)}")
-    msg.attach(part)
+    # Open the file to be sent
+    with open(file_path, "rb") as attachment:
+        # instance of MIMEBase and named as p
+        part = MIMEBase('application', 'octet-stream')
+        # To change the payload into encoded form
+        part.set_payload((attachment).read())
+        # encode into base64
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f"attachment; filename= {os.path.basename(file_path)}")
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(from_email, from_password)
-    text = msg.as_string()
-    server.sendmail(from_email, recipient_email, text)
-    server.quit()
+        # attach the instance 'part' to instance 'msg'
+        msg.attach(part)
+
+    try:
+        # Creates SMTP session
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        # Login with mail_id and password
+        server.login(from_email, from_password)
+
+        # Converts the Multipart msg into a string
+        text = msg.as_string()
+
+        # sending the mail
+        server.sendmail(from_email, to_email, text)
+        server.quit()
+
+        return "Email sent successfully!"
+
+    except Exception as e:
+        return str(e)
 
 # Set the page config at the very beginning
 st.set_page_config(page_title="QHPC-UOL Cricket Academy Feedback", layout="wide")
@@ -100,10 +115,16 @@ if st.button("Submit Feedback"):
         file.write(f"Additional Comments:\n{additional_comments}\n")
 
     # Send email with CSV and comments
-    send_email(csv_file, "waseefkhalid481@gmail.com")
-    send_email(comments_file, "waseefkhalid481@gmail.com")
+    email_status = send_email(
+        subject="QHPC-UOL Cricket Academy Feedback",
+        body="Please find the attached feedback report.",
+        to_email="waseefkhalid481@gmail.com",
+        from_email="your_email@example.com",  # Replace with your email
+        from_password="your_password",  # Replace with your email password
+        file_path=csv_file
+    )
 
-    st.success("Feedback submitted and sent to email successfully!")
+    st.success(email_status)
 
 if st.button("Export to CSV"):
     df = pd.DataFrame(feedback_data)
